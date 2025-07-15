@@ -183,7 +183,7 @@ function CvPage({ showContent }: CvPageProps) {
           {/* Boutons d'action */}
           <motion.div variants={itemVariants} className="flex flex-col sm:flex-row gap-4">
             <motion.a
-              href="/cv-zinasoa.pdf"
+              href="/cv.pdf"
               download
               whileHover={{ scale: 1.05, boxShadow: "0 10px 30px rgba(147, 51, 234, 0.3)" }}
               whileTap={{ scale: 0.95 }}
