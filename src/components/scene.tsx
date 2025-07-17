@@ -1,5 +1,3 @@
-"use client"
-
 import { useRef, useEffect, Suspense, useMemo } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
 import { useGLTF, useAnimations, OrbitControls, Environment, PresentationControls } from "@react-three/drei"
@@ -25,7 +23,7 @@ function Model({ showContent }: ModelProps) {
     if (group.current && showContent) {
       const t = state.clock.getElapsedTime()
       group.current.rotation.y = Math.sin(t * 0.5) * 0.1
-      group.current.position.y = Math.sin(t * 0.8) * 0.1 - 1 // Descendu de 1 unité
+      group.current.position.y = Math.sin(t * 0.8) * 0.1 - 1 
     }
   })
 
@@ -34,7 +32,7 @@ function Model({ showContent }: ModelProps) {
       <primitive
         object={scene}
         scale={showContent ? [2, 2, 2] : [0.1, 0.1, 0.1]}
-        position={[0, -1, 0]} // Position plus basse
+        position={[0, -1, 0]} 
       />
     </group>
   )
@@ -45,8 +43,8 @@ useGLTF.preload("/walk.glb")
 function CameraController({ showContent }: { showContent: boolean }) {
   const { camera } = useThree()
   const animationRef = useRef({ startTime: 0, isAnimating: false })
-  const startPosition = useMemo(() => new THREE.Vector3(8, 3, 8), []) // Position plus basse
-  const endPosition = useMemo(() => new THREE.Vector3(3, 1, 5), []) // Position plus basse
+  const startPosition = useMemo(() => new THREE.Vector3(8, 3, 8), []) 
+  const endPosition = useMemo(() => new THREE.Vector3(3, 1, 5), []) 
 
   useEffect(() => {
     if (showContent) {
@@ -54,7 +52,7 @@ function CameraController({ showContent }: { showContent: boolean }) {
       animationRef.current.isAnimating = true
     } else {
       camera.position.copy(startPosition)
-      camera.lookAt(0, -0.5, 0) // Regarde légèrement plus bas
+      camera.lookAt(0, -0.5, 0)
       animationRef.current.isAnimating = false
     }
   }, [showContent, camera, startPosition])
@@ -93,13 +91,13 @@ export default function Scene3D({ showContent }: ModelProps) {
   return (
     <div className="w-full h-full relative">
       <Canvas
-        camera={{ position: [8, 3, 8], fov: 50 }} // Position caméra ajustée
+        camera={{ position: [8, 3, 8], fov: 50 }} 
         className="rounded-2xl"
         onCreated={({ gl }) => {
           gl.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-          gl.setClearColor(0x000000, 0) // Background transparent
+          gl.setClearColor(0x000000, 0) 
         }}
-        style={{ background: "transparent" }} // Background transparent
+        style={{ background: "transparent" }} 
       >
         {/* Lumières optimisées */}
         <ambientLight intensity={0.6} />
@@ -139,7 +137,7 @@ export default function Scene3D({ showContent }: ModelProps) {
           maxDistance={12}
           minPolarAngle={Math.PI / 8}
           maxPolarAngle={Math.PI - Math.PI / 8}
-          target={[0, -0.5, 0]} // Cible plus basse
+          target={[0, -0.5, 0]}
         />
       </Canvas>
 
