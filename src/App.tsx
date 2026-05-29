@@ -131,7 +131,7 @@ export default function App() {
         >
           <ChevronLeft size={20} />
         </button>
-        
+
         {/* Indicateurs de page */}
         <div className="flex space-x-2">
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -144,7 +144,7 @@ export default function App() {
             />
           ))}
         </div>
-        
+
         <button
           onClick={nextPage}
           disabled={currentPage === totalPages}

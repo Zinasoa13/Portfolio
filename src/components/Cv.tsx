@@ -139,7 +139,7 @@ function CvPage({ showContent }: CvPageProps) {
                   className="w-full h-full object-cover rounded-xl"
                 />
 
-  
+
               </motion.div>
 
               {/* Indicateur de verso en bas à droite */}
