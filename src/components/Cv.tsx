@@ -95,7 +95,7 @@ function CvPage({ showContent }: CvPageProps) {
         variants={titleVariants}
         initial="hidden"
         animate={showContent ? "visible" : "hidden"}
-        className="text-5xl font-bold text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent transition-all duration-500 ease-in-out cursor-pointer mb-12"
+        className="text-4xl lg:text-5xl font-bold text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent transition-all duration-500 ease-in-out cursor-pointer mb-8 lg:mb-10"
       >
         Mon Curriculum Vitae
       </motion.h1>
@@ -104,10 +104,10 @@ function CvPage({ showContent }: CvPageProps) {
         variants={containerVariants}
         initial="hidden"
         animate={showContent ? "visible" : "hidden"}
-        className="bg-white rounded-2xl shadow-xl p-8 flex flex-col md:flex-row items-center gap-12 max-w-6xl w-full border border-gray-100"
+        className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 flex flex-col md:flex-row items-center gap-8 lg:gap-12 max-w-5xl w-full border border-gray-100"
       >
         {/* Image du CV avec overlay verso */}
-        <motion.div variants={imageVariants} className="w-full md:w-1/2 relative group">
+        <motion.div variants={imageVariants} className="w-full md:w-[45%] lg:w-[40%] relative group">
           <motion.div
             animate={{ scale: isHovered ? 1.02 : 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -120,7 +120,7 @@ function CvPage({ showContent }: CvPageProps) {
               <img
                 src="/cv1.png?height=600&width=450"
                 alt="CV Zinasoa - Recto"
-                className="rounded-xl w-full shadow-md transition-all duration-300"
+                className="rounded-xl w-full max-h-[500px] object-contain shadow-md transition-all duration-300"
               />
 
               {/* Overlay verso avec transition du bas vers le haut */}
@@ -136,7 +136,7 @@ function CvPage({ showContent }: CvPageProps) {
                 <img
                   src="/cv2.png?height=600&width=450"
                   alt="CV Zinasoa - Verso"
-                  className="w-full h-full object-cover rounded-xl"
+                  className="w-full h-full max-h-[500px] object-contain rounded-xl"
                 />
 
 
@@ -166,7 +166,7 @@ function CvPage({ showContent }: CvPageProps) {
         </motion.div>
 
         {/* Description + boutons */}
-        <motion.div variants={textVariants} className="w-full md:w-1/2 text-center md:text-left space-y-6">
+        <motion.div variants={textVariants} className="w-full md:flex-1 text-center md:text-left space-y-4 lg:space-y-6">
           <motion.h2 variants={itemVariants} className="text-4xl font-bold text-gray-800 mb-4">
             <Typewriter
               options={{
