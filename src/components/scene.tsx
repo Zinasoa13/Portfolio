@@ -7,6 +7,7 @@ import * as THREE from "three"
 
 interface ModelProps {
   showContent: boolean
+  isDarkMode?: boolean
 }
 
 function Model({ showContent }: ModelProps) {
@@ -85,7 +86,7 @@ function LoadingFallback() {
   )
 }
 
-export default function Scene3D({ showContent }: ModelProps) {
+export default function Scene3D({ showContent, isDarkMode }: ModelProps) {
   return (
     <div className="w-full h-full relative">
       <Canvas
@@ -97,16 +98,32 @@ export default function Scene3D({ showContent }: ModelProps) {
         }}
         style={{ background: "transparent" }}
       >
-        <ambientLight intensity={0.6} />
+        <ambientLight intensity={isDarkMode ? 0.3 : 0.6} />
         <directionalLight
           position={[5, 8, 5]}
-          intensity={1.2}
+          intensity={isDarkMode ? 0.5 : 1.2}
           castShadow
           shadow-mapSize-width={2048}
           shadow-mapSize-height={2048}
         />
-        <pointLight position={[-5, 2, -5]} intensity={0.4} />
-        <Environment preset="city" />
+        <pointLight position={[-5, 2, -5]} intensity={isDarkMode ? 0.2 : 0.4} />
+
+        {/* Purple "Lightning" Shine for Dark Mode */}
+        {isDarkMode && (
+          <>
+            <spotLight
+              position={[0, 6, -1.5]} // More central, above and slightly behind
+              angle={0.6} // Wider angle
+              penumbra={0.5} // Softer edges
+              intensity={400} // Increased intensity
+              color="#a855f7" // Purple-500
+              castShadow
+              target-position={[0, 1.2, 0]} // Target the top of the head
+            />
+          </>
+        )}
+
+        <Environment preset={isDarkMode ? "night" : "city"} />
 
         <CameraController showContent={showContent} />
 

@@ -90,12 +90,12 @@ function CvPage({ showContent }: CvPageProps) {
   }
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center px-6 py-8">
+    <div className="w-full h-full flex flex-col items-center justify-start px-6 pt-4 lg:pt-8 pb-10 overflow-y-auto">
       <motion.h1
         variants={titleVariants}
         initial="hidden"
         animate={showContent ? "visible" : "hidden"}
-        className="text-4xl lg:text-5xl font-bold text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent transition-all duration-500 ease-in-out cursor-pointer mb-8 lg:mb-10"
+        className="text-4xl lg:text-5xl font-bold text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent transition-all duration-500 ease-in-out cursor-pointer mb-4 lg:mb-6"
       >
         Mon Curriculum Vitae
       </motion.h1>
@@ -104,10 +104,10 @@ function CvPage({ showContent }: CvPageProps) {
         variants={containerVariants}
         initial="hidden"
         animate={showContent ? "visible" : "hidden"}
-        className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 flex flex-col md:flex-row items-center gap-8 lg:gap-12 max-w-5xl w-full border border-gray-100"
+        className="bg-white dark:bg-slate-900/50 rounded-2xl shadow-xl p-6 lg:p-8 flex flex-col md:flex-row items-center gap-8 lg:gap-12 max-w-6xl w-full border border-gray-100 dark:border-white/5 backdrop-blur-sm"
       >
         {/* Image du CV avec overlay verso */}
-        <motion.div variants={imageVariants} className="w-full md:w-[45%] lg:w-[40%] relative group">
+        <motion.div variants={imageVariants} className="w-full md:w-1/2 relative group">
           <motion.div
             animate={{ scale: isHovered ? 1.02 : 1 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
@@ -120,7 +120,7 @@ function CvPage({ showContent }: CvPageProps) {
               <img
                 src="/cv1.png?height=600&width=450"
                 alt="CV Zinasoa - Recto"
-                className="rounded-xl w-full max-h-[500px] object-contain shadow-md transition-all duration-300"
+                className="rounded-xl w-full h-auto max-h-[70vh] object-contain shadow-md transition-all duration-300"
               />
 
               {/* Overlay verso avec transition du bas vers le haut */}
@@ -131,12 +131,12 @@ function CvPage({ showContent }: CvPageProps) {
                   duration: 0.8,
                   ease: [0.25, 0.46, 0.45, 0.94],
                 }}
-                className="absolute inset-0 bg-white rounded-xl overflow-hidden z-10"
+                className="absolute inset-0 bg-white dark:bg-slate-900 rounded-xl overflow-hidden z-10"
               >
                 <img
                   src="/cv2.png?height=600&width=450"
                   alt="CV Zinasoa - Verso"
-                  className="w-full h-full max-h-[500px] object-contain rounded-xl"
+                  className="w-full h-full max-h-[70vh] object-contain rounded-xl"
                 />
 
 
@@ -167,7 +167,7 @@ function CvPage({ showContent }: CvPageProps) {
 
         {/* Description + boutons */}
         <motion.div variants={textVariants} className="w-full md:flex-1 text-center md:text-left space-y-4 lg:space-y-6">
-          <motion.h2 variants={itemVariants} className="text-4xl font-bold text-gray-800 mb-4">
+          <motion.h2 variants={itemVariants} className="text-4xl font-bold text-gray-800 dark:text-slate-100 mb-4">
             <Typewriter
               options={{
                 strings: [
@@ -183,7 +183,7 @@ function CvPage({ showContent }: CvPageProps) {
             />
           </motion.h2>
 
-          <motion.p variants={itemVariants} className="text-gray-600 text-lg leading-relaxed mb-8">
+          <motion.p variants={itemVariants} className="text-gray-600 dark:text-slate-300 text-lg leading-relaxed mb-6 lg:mb-8">
             Découvrez mon parcours professionnel, mes compétences techniques et mes expériences. Mon CV détaille mes
             projets, formations et expertises en développement mobile et web.
             <br />
@@ -193,18 +193,18 @@ function CvPage({ showContent }: CvPageProps) {
           </motion.p>
 
           {/* Stats rapides */}
-          <motion.div variants={itemVariants} className="grid grid-cols-3 gap-4 mb-8">
-            <div className="text-center p-3 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">5+</div>
-              <div className="text-sm text-gray-600">Projets réalisés</div>
+          <motion.div variants={itemVariants} className="grid grid-cols-3 gap-4 mb-6 lg:mb-8">
+            <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">5+</div>
+              <div className="text-sm text-gray-600 dark:text-slate-400">Projets réalisés</div>
             </div>
-            <div className="text-center p-3 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">3</div>
-              <div className="text-sm text-gray-600">Technologies</div>
+            <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">3</div>
+              <div className="text-sm text-gray-600 dark:text-slate-400">Technologies</div>
             </div>
-            <div className="text-center p-3 bg-purple-50 rounded-lg">
-              <div className="text-2xl font-bold text-purple-600">2</div>
-              <div className="text-sm text-gray-600">Pages CV</div>
+            <div className="text-center p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400">2</div>
+              <div className="text-sm text-gray-600 dark:text-slate-400">Pages CV</div>
             </div>
           </motion.div>
 

@@ -138,11 +138,11 @@ function ContactPage({ showContent }: ContactPageProps) {
           variants={containerVariants}
           initial="hidden"
           animate={showContent ? "visible" : "hidden"}
-          className="bg-white shadow-lg rounded-xl p-6 max-w-3xl w-full border border-gray-100"
+          className="bg-white dark:bg-slate-900/50 shadow-lg rounded-xl p-6 max-w-3xl w-full border border-gray-100 dark:border-white/5 backdrop-blur-sm"
         >
           {/* Message d'introduction */}
           <motion.div variants={itemVariants} className="text-center mb-6">
-            <p className="text-gray-600 text-base">N'hésitez pas à me contacter pour vos projets ou collaborations !</p>
+            <p className="text-gray-600 dark:text-slate-400 text-base">N'hésitez pas à me contacter pour vos projets ou collaborations !</p>
           </motion.div>
 
           {/* Grille des contacts - 2 rangées de 3 */}
@@ -154,19 +154,19 @@ function ContactPage({ showContent }: ContactPageProps) {
                   key={index}
                   variants={itemVariants}
                   whileHover={{ scale: 1.05, y: -3 }}
-                  className={`${item.bgColor} ${item.hoverColor} rounded-lg p-4 transition-all duration-300 group cursor-pointer border border-gray-100 text-center relative overflow-hidden`}
+                  className={`${item.bgColor} dark:bg-slate-800/50 ${item.hoverColor} dark:hover:bg-slate-800 rounded-lg p-4 transition-all duration-300 group cursor-pointer border border-gray-100 dark:border-white/5 text-center relative overflow-hidden`}
                 >
                   <div className="relative z-10">
                     {/* Icône */}
                     <motion.div
                       whileHover={{ scale: 1.1, rotate: 5 }}
-                      className={`${item.color} p-2 bg-white rounded-full shadow-md mx-auto mb-2 w-10 h-10 flex items-center justify-center group-hover:shadow-lg transition-all duration-300`}
+                      className={`${item.color} p-2 bg-white dark:bg-slate-900 rounded-full shadow-md mx-auto mb-2 w-10 h-10 flex items-center justify-center group-hover:shadow-lg transition-all duration-300`}
                     >
                       <IconComponent className="w-5 h-5" />
                     </motion.div>
 
                     {/* Label */}
-                    <h3 className="text-gray-800 font-semibold text-sm mb-1">{item.label}</h3>
+                    <h3 className="text-gray-800 dark:text-slate-200 font-semibold text-sm mb-1">{item.label}</h3>
 
                     {/* Lien */}
                     <motion.a
@@ -186,7 +186,7 @@ function ContactPage({ showContent }: ContactPageProps) {
                         onClick={() => copyToClipboard(item.copyText!, item.label)}
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
-                        className="w-full py-1 px-2 bg-white/60 hover:bg-white/90 rounded text-gray-600 hover:text-purple-600 transition-all duration-200 flex items-center justify-center gap-1 text-xs font-medium"
+                        className="w-full py-1 px-2 bg-white/60 dark:bg-slate-900/60 hover:bg-white/90 dark:hover:bg-slate-900 rounded text-gray-600 dark:text-slate-400 hover:text-purple-600 dark:hover:text-purple-400 transition-all duration-200 flex items-center justify-center gap-1 text-xs font-medium"
                       >
                         <Copy className="w-3 h-3" />
                         Copier
@@ -214,9 +214,9 @@ function ContactPage({ showContent }: ContactPageProps) {
           <motion.div variants={itemVariants} className="text-center">
             <motion.div
               whileHover={{ scale: 1.01 }}
-              className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 rounded-lg border border-purple-100"
+              className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-100 dark:border-purple-900/30"
             >
-              <p className="text-gray-700 text-sm">
+              <p className="text-gray-700 dark:text-slate-300 text-sm">
                 <strong>Prêt à collaborer ?</strong> Je réponds généralement dans les 24h !
               </p>
             </motion.div>
@@ -231,7 +231,7 @@ function ContactPage({ showContent }: ContactPageProps) {
         transition={{ duration: 0.8, delay: 0.5 }}
         className="w-80 h-full flex-shrink-0 relative"
       >
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-pink-50/30 rounded-l-3xl backdrop-blur-sm">
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-50/30 to-pink-50/30 dark:from-purple-900/10 dark:to-pink-900/10 rounded-l-3xl backdrop-blur-sm">
           <Contact3DModel showContent={showContent} />
         </div>
 
@@ -239,12 +239,12 @@ function ContactPage({ showContent }: ContactPageProps) {
         <div className="absolute bottom-6 left-6 right-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
-            animate={showContent ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+            animate={showContent ? "visible" : "hidden"}
             transition={{ duration: 0.6, delay: 1.2 }}
-            className="bg-white/80 backdrop-blur-md rounded-xl p-3 text-center border border-white/20"
+            className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-md rounded-xl p-3 text-center border border-white/20 dark:border-white/5"
           >
-            <p className="text-xs text-gray-600 font-medium">✨ Gardons contact...</p>
-            <p className="text-xs text-gray-500">Je suis dispo quand vous voulez et où vous voulez !</p>
+            <p className="text-xs text-gray-600 dark:text-slate-300 font-medium">✨ Gardons contact...</p>
+            <p className="text-xs text-gray-500 dark:text-slate-500">Je suis dispo quand vous voulez et où vous voulez !</p>
           </motion.div>
         </div>
       </motion.div>

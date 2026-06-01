@@ -129,19 +129,19 @@ function ProjectsPage({ showContent }: ProjectsPageProps) {
                 boxShadow: "0 20px 40px rgba(0,0,0,0.1)",
               }}
               whileTap={{ scale: 0.98 }}
-              className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 group"
+              className="bg-white dark:bg-slate-900/50 p-6 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-white/5 backdrop-blur-sm group"
             >
-              <h2 className="text-2xl font-semibold text-gray-800 mb-3 group-hover:text-purple-500 transition-colors duration-300">
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-slate-100 mb-3 group-hover:text-purple-500 transition-colors duration-300">
                 {project.title}
               </h2>
-              <p className="text-gray-600 mb-4 leading-relaxed">{project.description}</p>
+              <p className="text-gray-600 dark:text-slate-300 mb-4 leading-relaxed">{project.description}</p>
 
               {/* Technologies utilisées */}
               <div className="flex flex-wrap gap-2 mb-4">
                 {project.tech.map((tech, techIndex) => (
                   <span
                     key={techIndex}
-                    className="px-2 py-1 bg-purple-100 text-purple-600 text-xs rounded-full font-medium"
+                    className="px-2 py-1 bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-300 text-xs rounded-full font-medium"
                   >
                     {tech}
                   </span>
@@ -203,7 +203,7 @@ function ProjectsPage({ showContent }: ProjectsPageProps) {
               whileHover={{ scale: 1.2 }}
               whileTap={{ scale: 0.9 }}
               className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                page === i ? "bg-purple-500 scale-125" : "bg-gray-300 hover:bg-purple-300"
+                page === i ? "bg-purple-500 scale-125" : "bg-gray-300 dark:bg-slate-700 hover:bg-purple-300"
               }`}
             />
           ))}
