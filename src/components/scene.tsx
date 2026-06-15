@@ -2,7 +2,7 @@
 
 import { useRef, useEffect, Suspense, useMemo } from "react"
 import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { useGLTF, useAnimations, OrbitControls, Environment, PresentationControls } from "@react-three/drei"
+import { useGLTF, useAnimations, Environment, PresentationControls, Html } from "@react-three/drei"
 import * as THREE from "three"
 
 interface ModelProps {
@@ -123,7 +123,7 @@ export default function Scene3D({ showContent, isDarkMode }: ModelProps) {
           </>
         )}
 
-        <Environment preset={isDarkMode ? "night" : "city"} />
+        <Environment preset="city" environmentIntensity={isDarkMode ? 0.2 : 1.0} />
 
         <CameraController showContent={showContent} />
 
@@ -136,24 +136,11 @@ export default function Scene3D({ showContent, isDarkMode }: ModelProps) {
           polar={[-Math.PI / 4, Math.PI / 3]}
           azimuth={[-Math.PI / 1.2, Math.PI / 1.2]}
         >
-          <Suspense fallback={null}>
+          <Suspense fallback={<Html center><LoadingFallback /></Html>}>
             <Model showContent={showContent} />
           </Suspense>
         </PresentationControls>
-
-        <OrbitControls
-          enablePan={false}
-          enableZoom
-          enableRotate
-          minDistance={3}
-          maxDistance={12}
-          minPolarAngle={Math.PI / 8}
-          maxPolarAngle={Math.PI - Math.PI / 8}
-          target={[0, -0.5, 0]}
-        />
       </Canvas>
-
-      {!showContent && <LoadingFallback />}
 
       <div
         className={`absolute bottom-6 left-6 bg-black/20 backdrop-blur-md rounded-xl p-4 border border-white/10 transform transition-all duration-500 ${

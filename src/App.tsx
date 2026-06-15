@@ -70,18 +70,18 @@ export default function App() {
             {/* Contenu texte à gauche */}
             <div className="w-full lg:w-1/2 h-auto lg:h-2/5 text-left justify-center flex flex-col items-start">
               <h1
-                className={`text-3xl lg:text-5xl mb-6 lg:mb-8 font-bold text-purple-600 dark:text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent transition-all duration-500 ease-in-out cursor-pointer transform ${
+                className={`text-3xl lg:text-5xl mb-6 lg:mb-8 font-bold text-purple-600 dark:text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent cursor-pointer transform ${
                   showContent ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
                 }`}
-                style={{ transitionDelay: showContent ? "200ms" : "0ms" }}
+                style={{ transition: `all 500ms ease-in-out ${showContent ? "200ms" : "0ms"}` }}
               >
                 Hi! I'm Zinasoa Fiderana Andriamanoro
               </h1>
               <p
-                className={`text-2xl lg:text-4xl mb-4 lg:mb-6 font-semibold text-purple-600 dark:text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent transition-all duration-500 ease-in-out cursor-pointer transform ${
+                className={`text-2xl lg:text-4xl mb-4 lg:mb-6 font-semibold text-purple-600 dark:text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent cursor-pointer transform ${
                   showContent ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
                 }`}
-                style={{ transitionDelay: showContent ? "400ms" : "0ms" }}
+                style={{ transition: `all 500ms ease-in-out ${showContent ? "400ms" : "0ms"}` }}
               >
                 I'm a great mobile & web developer
               </p>
@@ -89,7 +89,7 @@ export default function App() {
                 className={`w-full h-auto lg:h-12 transform ${
                   showContent ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
                 }`}
-                style={{ transitionDelay: showContent ? "600ms" : "0ms", transition: "all 0.6s ease-in-out" }}
+                style={{ transition: `all 600ms ease-in-out ${showContent ? "600ms" : "0ms"}` }}
               >
                 <div className="text-sm lg:text-lg leading-relaxed text-gray-700 dark:text-gray-300">
                   <Typewriter
@@ -108,15 +108,8 @@ export default function App() {
                 </div>
               </div>
             </div>
-            {/* Section 3D à droite */}
-            <div
-              className={`hidden lg:block w-1/2 h-full transform ${
-                showContent ? "translate-x-0 opacity-100" : "translate-x-10 opacity-0"
-              }`}
-              style={{ transitionDelay: showContent ? "800ms" : "0ms", transition: "all 0.8s ease-in-out" }}
-            >
-              <Scene3D showContent={showContent} isDarkMode={isDarkMode} />
-            </div>
+            {/* PUT THIS INSTEAD */}
+            <div className="hidden lg:block w-1/2 h-full pointer-events-none"></div>
           </div>
         )
       case 2:
@@ -138,6 +131,17 @@ export default function App() {
           isAnimating ? "translate-x-0" : "translate-x-full"
         } z-10`}
       ></div>
+
+      {/* Persistent 3D Container */}
+      <div 
+        className={`absolute inset-0 w-full h-full transition-all duration-500 z-0 ${
+          currentPage === 1 ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="absolute right-0 top-0 w-full lg:w-1/2 h-full hidden lg:block px-8 lg:px-16">
+          <Scene3D showContent={showContent && currentPage === 1} isDarkMode={isDarkMode} />
+        </div>
+      </div>
 
       {/* Contenu principal */}
       <div className="flex-1 flex items-center justify-center w-full">
