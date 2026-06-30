@@ -69,21 +69,29 @@ export default function App() {
           <div className="w-full h-full flex items-center justify-between px-8 lg:px-16">
             {/* Contenu texte à gauche */}
             <div className="w-full lg:w-1/2 h-auto lg:h-2/5 text-left justify-center flex flex-col items-start">
+              {/* Main Heading: global hover styles removed */}
               <h1
-                className={`text-3xl lg:text-5xl mb-6 lg:mb-8 font-bold text-purple-600 dark:text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent cursor-pointer transform ${
-                  showContent ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
-                }`}
-                style={{ transition: `all 500ms ease-in-out ${showContent ? "200ms" : "0ms"}` }}
-              >
-                Hi! I'm Zinasoa Fiderana Andriamanoro
-              </h1>
+				className={`text-3xl lg:text-5xl mb-6 lg:mb-8 font-bold text-purple-600 dark:text-purple-400 transform ${
+					showContent ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
+				}`}
+				style={{ transition: `all 500ms ease-in-out ${showContent ? "200ms" : "0ms"}` }}
+				>
+				Hi! I'm{" "}
+				<span
+					className="cursor-pointer transition-all duration-700 ease-in-out bg-clip-text text-transparent bg-[length:200%_auto] bg-left bg-gradient-to-r from-purple-600 via-pink-500 via-red-500 to-purple-600 dark:from-purple-400 dark:via-pink-400 dark:via-red-400 dark:to-purple-400 hover:bg-right"
+				>
+					Zinasoa
+				</span>{" "}
+				Fiderana Andriamanoro
+				</h1>
+
               <p
                 className={`text-2xl lg:text-4xl mb-4 lg:mb-6 font-semibold text-purple-600 dark:text-purple-400 hover:bg-gradient-to-r hover:from-purple-400 hover:via-pink-500 hover:to-red-500 hover:bg-clip-text hover:text-transparent cursor-pointer transform ${
                   showContent ? "translate-x-0 opacity-100" : "-translate-x-10 opacity-0"
                 }`}
                 style={{ transition: `all 500ms ease-in-out ${showContent ? "400ms" : "0ms"}` }}
               >
-                I'm a great mobile & web developer
+                I'm a third year IT student in Software Development
               </p>
               <div
                 className={`w-full h-auto lg:h-12 transform ${
@@ -96,7 +104,7 @@ export default function App() {
                     options={{
                       strings: [
                         "Développeur mobile et web full-stack avec une expertise dans la conception et le développement d'applications performantes (Android/iOS) et de sites web dynamiques.",
-                        "Passionné par les technologies modernes, je maîtrise Flutter, React Native, Kotlin, Swift, JavaScript/TypeScript, React, Node.js et Firebase.",
+                        "Passionné par les technologies modernes, je maîtrise Flutter, React Native, Spring Boot, JavaScript/TypeScript, React, Node.js et Firebase.",
                         "Mon approche allie code optimisé, UX intuitive et solutions scalables, avec une forte adaptabilité aux nouvelles tendances tech.",
                         "À la recherche de projets innovants pour concrétiser des idées impactantes.",
                       ],
@@ -133,7 +141,7 @@ export default function App() {
       ></div>
 
       {/* Persistent 3D Container */}
-      <div 
+      <div
         className={`absolute inset-0 w-full h-full transition-all duration-500 z-0 ${
           currentPage === 1 ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
@@ -204,7 +212,7 @@ export default function App() {
             {isDarkMode ? <Sun size={24} /> : <Moon size={24} />}
           </motion.div>
         </AnimatePresence>
-        
+
         {/* Tooltip simple */}
         <span className="absolute right-full mr-4 top-1/2 -translate-y-1/2 px-2 py-1 rounded bg-slate-800 text-white text-xs opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
           {isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}

@@ -217,7 +217,7 @@ function ContactPage({ showContent }: ContactPageProps) {
               className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-100 dark:border-purple-900/30"
             >
               <p className="text-gray-700 dark:text-slate-300 text-sm">
-                <strong>Prêt à collaborer ?</strong> Je réponds généralement dans les 24h !
+                <strong>Prêt à collaborer ?</strong> Je serai disponible en stage à partir du mois de Septembre !
               </p>
             </motion.div>
           </motion.div>

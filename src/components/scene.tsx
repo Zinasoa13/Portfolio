@@ -142,16 +142,6 @@ export default function Scene3D({ showContent, isDarkMode }: ModelProps) {
         </PresentationControls>
       </Canvas>
 
-      <div
-        className={`absolute bottom-6 left-6 bg-black/20 backdrop-blur-md rounded-xl p-4 border border-white/10 transform transition-all duration-500 ${
-          showContent
-            ? "translate-y-0 opacity-100 scale-100 delay-[1200ms]"
-            : "translate-y-8 opacity-0 scale-95 delay-0"
-        }`}
-      >
-        <div className="text-sm text-white font-medium flex items-center gap-2">🥰Voici ma représentation en 3D</div>
-        <div className="text-xs text-white/70 mt-1">Profitez-en !</div>
-      </div>
     </div>
   )
 }
