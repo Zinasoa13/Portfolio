@@ -16,12 +16,35 @@ const isMobileDevice = () => {
   )
 }
 
-function Model({ showContent }: { showContent: boolean }) {
+function Model({ showContent, isDarkMode }: { showContent: boolean; isDarkMode: boolean }) {
   const group = useRef<THREE.Group>(null)
   const { scene, animations } = useGLTF("/walk.glb")
   const { actions } = useAnimations(animations, group)
   const [scale, setScale] = useState<[number, number, number]>([1.3, 1.3, 1.3])
   const [posY, setPosY] = useState<number>(-1.3)
+
+  // Ajustement doux des matériaux pour éviter la surexposition des blancs et l'effet brillant sur la peau
+  useEffect(() => {
+    if (scene) {
+      scene.traverse((child) => {
+        if ((child as THREE.Mesh).isMesh) {
+          const mesh = child as THREE.Mesh
+          if (mesh.material) {
+            const mat = mesh.material as THREE.MeshStandardMaterial
+            if (mat.isMeshStandardMaterial) {
+              // Adoucit les reflets métalliques/spéculaires trop violents en mode clair
+              if (!isDarkMode) {
+                if (mat.roughness < 0.45) mat.roughness = 0.55
+                mat.envMapIntensity = 0.4
+              } else {
+                mat.envMapIntensity = 0.8
+              }
+            }
+          }
+        }
+      })
+    }
+  }, [scene, isDarkMode])
 
   useEffect(() => {
     const handleResize = () => {
@@ -108,6 +131,8 @@ export default function Scene3D({ showContent, isDarkMode }: SceneProps) {
     glRef.current = gl
     gl.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
     gl.setClearColor(0x000000, 0)
+    gl.toneMapping = THREE.ACESFilmicToneMapping
+    gl.toneMappingExposure = isDarkMode ? 1.0 : 0.85
 
     const canvasEl = gl.domElement
 
@@ -120,6 +145,8 @@ export default function Scene3D({ showContent, isDarkMode }: SceneProps) {
       console.info("[Scene3D] WebGL context restored — re-initialisation du renderer.")
       gl.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
       gl.setClearColor(0x000000, 0)
+      gl.toneMapping = THREE.ACESFilmicToneMapping
+      gl.toneMappingExposure = isDarkMode ? 1.0 : 0.85
     }
 
     canvasEl.addEventListener("webglcontextlost", handleContextLost, false)
@@ -127,7 +154,7 @@ export default function Scene3D({ showContent, isDarkMode }: SceneProps) {
 
     ;(canvasEl as any).__contextLostHandler = handleContextLost
     ;(canvasEl as any).__contextRestoredHandler = handleContextRestored
-  }, [])
+  }, [isDarkMode])
 
   useEffect(() => {
     return () => {
@@ -163,16 +190,37 @@ export default function Scene3D({ showContent, isDarkMode }: SceneProps) {
         onCreated={handleCreated}
       >
         <CameraController isMobile={isMobile} />
-        <ambientLight intensity={isDarkMode ? 0.6 : 0.8} />
-        <directionalLight position={[5, 8, 5]} intensity={isDarkMode ? 1.0 : 1.4} castShadow />
-        {/* Soft prestige amethyst rim light in dark mode */}
-        <pointLight position={[-4, 3, -2]} intensity={isDarkMode ? 1.5 : 0.6} color={isDarkMode ? "#c084fc" : "#e9d5ff"} />
-        <pointLight position={[4, -1, 3]} intensity={isDarkMode ? 1.2 : 0.4} color={isDarkMode ? "#a855f7" : "#cbd5e1"} />
+        
+        {/* Lumière ambiante dosée pour éviter l'effet surexposé */}
+        <ambientLight intensity={isDarkMode ? 0.6 : 0.55} />
+        
+        {/* HemisphereLight doux pour déboucher les ombres sur le bas du corps / jambes */}
+        <hemisphereLight
+          args={isDarkMode ? ["#c084fc", "#0f172a", 0.6] : ["#ffffff", "#475569", 0.85]}
+        />
 
-        <Environment preset={isDarkMode ? "city" : "studio"} />
+        {/* DirectionalLight principale : adoucie et réorientée pour éliminer la brûlure des hauts de torse et du visage */}
+        <directionalLight
+          position={isDarkMode ? [5, 8, 5] : [2, 5, 4]}
+          intensity={isDarkMode ? 1.0 : 0.45}
+          castShadow={false}
+        />
+
+        {/* Lumière de débouchage basse (fillLight) pour éclairer doucement le bas du corps et les jambes */}
+        <directionalLight
+          position={[0, -2, 4]}
+          intensity={isDarkMode ? 0.3 : 0.45}
+          color={isDarkMode ? "#a855f7" : "#cbd5e1"}
+        />
+
+        {/* Spotlights latéraux d'ambiance */}
+        <pointLight position={[-4, 3, -2]} intensity={isDarkMode ? 1.5 : 0.35} color={isDarkMode ? "#c084fc" : "#e9d5ff"} />
+        <pointLight position={[4, 1, 3]} intensity={isDarkMode ? 1.2 : 0.3} color={isDarkMode ? "#a855f7" : "#cbd5e1"} />
+
+        <Environment preset={isDarkMode ? "city" : "apartment"} environmentIntensity={isDarkMode ? 0.8 : 0.35} />
 
         <Suspense fallback={<Html center><LoadingFallback /></Html>}>
-          <Model showContent={showContent} />
+          <Model showContent={showContent} isDarkMode={isDarkMode} />
         </Suspense>
 
         <OrbitControls
