@@ -1,19 +1,48 @@
 "use client"
 
-import { useRef, useEffect, Suspense, useMemo } from "react"
-import { Canvas, useFrame, useThree } from "@react-three/fiber"
-import { useGLTF, useAnimations, Environment, PresentationControls, Html } from "@react-three/drei"
+import { useRef, useEffect, Suspense, useState, memo, useCallback } from "react"
+import { Canvas, useThree, useFrame } from "@react-three/fiber"
+import { useGLTF, useAnimations, Environment, OrbitControls, Html } from "@react-three/drei"
 import * as THREE from "three"
 
-interface ModelProps {
+interface SceneProps {
   showContent: boolean
-  isDarkMode?: boolean
+  isDarkMode: boolean
 }
 
-function Model({ showContent }: ModelProps) {
+const isMobileDevice = () => {
+  if (typeof window === "undefined") return false
+  return (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    window.innerWidth < 1024
+  )
+}
+
+function Model({ showContent }: { showContent: boolean }) {
   const group = useRef<THREE.Group>(null)
   const { scene, animations } = useGLTF("/walk.glb")
   const { actions } = useAnimations(animations, group)
+  const [scale, setScale] = useState<[number, number, number]>([1.3, 1.3, 1.3])
+  const [posY, setPosY] = useState<number>(-1.3)
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 640) {
+        setScale([1.2, 1.2, 1.2])
+        setPosY(-1.1)
+      } else if (window.innerWidth < 1024) {
+        setScale([1.4, 1.4, 1.4])
+        setPosY(-1.2)
+      } else {
+        // Desktop : échelle agrandie mais position remontée pour garder les pieds visibles dans le cadre
+        setScale([1.6, 1.6, 1.6])
+        setPosY(-1.15)
+      }
+    }
+    handleResize()
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
 
   useEffect(() => {
     if (actions) {
@@ -26,122 +55,137 @@ function Model({ showContent }: ModelProps) {
     if (group.current && showContent) {
       const t = state.clock.getElapsedTime()
       group.current.rotation.y = Math.sin(t * 0.5) * 0.1
-      group.current.position.y = Math.sin(t * 0.8) * 0.1 - 1
+      group.current.position.y = Math.sin(t * 0.8) * 0.08 + posY
     }
   })
 
   return (
     <group ref={group}>
-      <primitive object={scene} scale={showContent ? [2, 2, 2] : [0.1, 0.1, 0.1]} position={[0, -1, 0]} />
+      <primitive object={scene} scale={showContent ? scale : [0.1, 0.1, 0.1]} position={[0, posY, 0]} />
     </group>
   )
 }
 
 useGLTF.preload("/walk.glb")
 
-function CameraController({ showContent }: { showContent: boolean }) {
+function CameraController({ isMobile }: { isMobile: boolean }) {
   const { camera } = useThree()
-  const animationRef = useRef({ startTime: 0, isAnimating: false })
-  const startPosition = useMemo(() => new THREE.Vector3(8, 3, 8), [])
-  const endPosition = useMemo(() => new THREE.Vector3(3, 1, 5), [])
 
   useEffect(() => {
-    if (showContent) {
-      animationRef.current.startTime = Date.now()
-      animationRef.current.isAnimating = true
+    if (isMobile) {
+      camera.position.set(0, 0.2, 4.5)
+      camera.lookAt(0, -0.2, 0)
     } else {
-      camera.position.copy(startPosition)
-      camera.lookAt(0, -0.5, 0)
-      animationRef.current.isAnimating = false
+      // Éloignement de la caméra sur Z (5.5) pour voir le personnage en entier sans rognage
+      camera.position.set(0, 0, 5.5)
+      camera.lookAt(0, -0.15, 0)
     }
-  }, [showContent, camera, startPosition])
-
-  useFrame(() => {
-    if (animationRef.current.isAnimating) {
-      const elapsed = Date.now() - animationRef.current.startTime
-      const duration = 2000
-      const t = Math.min(elapsed / duration, 1)
-      const ease = t < 0.5 ? 4 * t ** 3 : 1 - Math.pow(-2 * t + 2, 3) / 2
-
-      camera.position.lerpVectors(startPosition, endPosition, ease)
-      camera.lookAt(0, -0.5, 0)
-
-      if (t >= 1) {
-        animationRef.current.isAnimating = false
-      }
-    }
-  })
+    camera.updateProjectionMatrix()
+  }, [camera, isMobile])
 
   return null
 }
 
-function LoadingFallback() {
-  return (
-    <div className="absolute inset-0 flex items-center justify-center w-full h-full bg-transparent">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-2"></div>
-        <p className="text-sm text-gray-600">Chargement du modèle 3D...</p>
-      </div>
+const LoadingFallback = memo(() => (
+  <div className="w-full h-full flex items-center justify-center">
+    <div className="flex flex-col items-center gap-2">
+      <div className="w-8 h-8 border-4 border-purple-200 dark:border-purple-800 border-t-purple-600 dark:border-t-purple-400 rounded-full animate-spin" />
+      <p className="text-xs text-gray-500 dark:text-gray-400">Chargement 3D...</p>
     </div>
-  )
-}
+  </div>
+))
+LoadingFallback.displayName = "LoadingFallback"
 
-export default function Scene3D({ showContent, isDarkMode }: ModelProps) {
+export default function Scene3D({ showContent, isDarkMode }: SceneProps) {
+  const [isMobile, setIsMobile] = useState<boolean>(() => isMobileDevice())
+  const glRef = useRef<THREE.WebGLRenderer | null>(null)
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(isMobileDevice())
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [])
+
+  const handleCreated = useCallback(({ gl }: { gl: THREE.WebGLRenderer }) => {
+    glRef.current = gl
+    gl.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
+    gl.setClearColor(0x000000, 0)
+
+    const canvasEl = gl.domElement
+
+    const handleContextLost = (event: Event) => {
+      event.preventDefault()
+      console.warn("[Scene3D] WebGL context lost — tentative de restauration automatique.")
+    }
+
+    const handleContextRestored = () => {
+      console.info("[Scene3D] WebGL context restored — re-initialisation du renderer.")
+      gl.setPixelRatio(Math.min(window.devicePixelRatio, 1.5))
+      gl.setClearColor(0x000000, 0)
+    }
+
+    canvasEl.addEventListener("webglcontextlost", handleContextLost, false)
+    canvasEl.addEventListener("webglcontextrestored", handleContextRestored, false)
+
+    ;(canvasEl as any).__contextLostHandler = handleContextLost
+    ;(canvasEl as any).__contextRestoredHandler = handleContextRestored
+  }, [])
+
+  useEffect(() => {
+    return () => {
+      const gl = glRef.current
+      if (gl) {
+        const canvasEl = gl.domElement as any
+        if (canvasEl.__contextLostHandler) {
+          canvasEl.removeEventListener("webglcontextlost", canvasEl.__contextLostHandler)
+        }
+        if (canvasEl.__contextRestoredHandler) {
+          canvasEl.removeEventListener("webglcontextrestored", canvasEl.__contextRestoredHandler)
+        }
+        gl.dispose()
+      }
+    }
+  }, [])
+
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full relative pointer-events-none">
       <Canvas
-        camera={{ position: [8, 3, 8], fov: 50 }}
-        className="rounded-2xl"
-        onCreated={({ gl }) => {
-          gl.setPixelRatio(Math.min(window.devicePixelRatio, 2))
-          gl.setClearColor(0x000000, 0)
+        className="pointer-events-auto"
+        camera={{
+          position: isMobile ? [0, 0.2, 4.5] : [0, 0, 5.5],
+          fov: 45,
         }}
-        style={{ background: "transparent" }}
+        style={{ width: "100%", height: "100%", background: "transparent" }}
+        dpr={[1, 1.5]}
+        gl={{
+          preserveDrawingBuffer: true,
+          powerPreference: "high-performance",
+          antialias: true,
+        }}
+        onCreated={handleCreated}
       >
-        <ambientLight intensity={isDarkMode ? 0.3 : 0.6} />
-        <directionalLight
-          position={[5, 8, 5]}
-          intensity={isDarkMode ? 0.5 : 1.2}
-          castShadow
-          shadow-mapSize-width={2048}
-          shadow-mapSize-height={2048}
+        <CameraController isMobile={isMobile} />
+        <ambientLight intensity={isDarkMode ? 0.6 : 0.8} />
+        <directionalLight position={[5, 8, 5]} intensity={isDarkMode ? 1.0 : 1.4} castShadow />
+        {/* Soft prestige amethyst rim light in dark mode */}
+        <pointLight position={[-4, 3, -2]} intensity={isDarkMode ? 1.5 : 0.6} color={isDarkMode ? "#c084fc" : "#e9d5ff"} />
+        <pointLight position={[4, -1, 3]} intensity={isDarkMode ? 1.2 : 0.4} color={isDarkMode ? "#a855f7" : "#cbd5e1"} />
+
+        <Environment preset={isDarkMode ? "city" : "studio"} />
+
+        <Suspense fallback={<Html center><LoadingFallback /></Html>}>
+          <Model showContent={showContent} />
+        </Suspense>
+
+        <OrbitControls
+          enableZoom={false}
+          enablePan={false}
+          enableRotate={true}
+          autoRotate={false}
+          autoRotateSpeed={isMobile ? 1.5 : 3}
+          target={isMobile ? [0, -0.2, 0] : [0, -0.15, 0]}
         />
-        <pointLight position={[-5, 2, -5]} intensity={isDarkMode ? 0.2 : 0.4} />
-
-        {/* Purple "Lightning" Shine for Dark Mode */}
-        {isDarkMode && (
-          <>
-            <spotLight
-              position={[0, 6, -1.5]} // More central, above and slightly behind
-              angle={0.6} // Wider angle
-              penumbra={0.5} // Softer edges
-              intensity={400} // Increased intensity
-              color="#a855f7" // Purple-500
-              castShadow
-              target-position={[0, 1.2, 0]} // Target the top of the head
-            />
-          </>
-        )}
-
-        <Environment preset="city" environmentIntensity={isDarkMode ? 0.2 : 1.0} />
-
-        <CameraController showContent={showContent} />
-
-        <PresentationControls
-          global={false}
-          cursor
-          speed={1.2}
-          zoom={1}
-          rotation={[0, 0, 0]}
-          polar={[-Math.PI / 4, Math.PI / 3]}
-          azimuth={[-Math.PI / 1.2, Math.PI / 1.2]}
-        >
-          <Suspense fallback={<Html center><LoadingFallback /></Html>}>
-            <Model showContent={showContent} />
-          </Suspense>
-        </PresentationControls>
       </Canvas>
-
     </div>
   )
 }
