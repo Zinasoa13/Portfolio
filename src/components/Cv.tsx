@@ -119,7 +119,7 @@ function CvPage({ showContent }: CvPageProps) {
             {/* Image recto (base) */}
             <div className="relative">
               <img
-                src="/cv1.png?height=600&width=450"
+                src="/cv1.png"
                 alt="CV Zinasoa - Recto"
                 className="rounded-xl w-full h-auto max-h-[45vh] sm:max-h-[60vh] lg:max-h-[65vh] object-contain shadow-md transition-all duration-300 mx-auto"
               />
