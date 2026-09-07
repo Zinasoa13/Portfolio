@@ -1,5 +1,3 @@
-"use client"
-
 import { useRef, useEffect, Suspense, useState, memo, useCallback } from "react"
 import { Canvas, useThree, useFrame } from "@react-three/fiber"
 import { useGLTF, useAnimations, Environment, OrbitControls, Html } from "@react-three/drei"

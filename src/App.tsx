@@ -1,5 +1,3 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import Typewriter from "typewriter-effect"
 import { ChevronLeft, ChevronRight, Moon, Sun, Hand, Menu, X, Home, User, Briefcase, Mail } from 'lucide-react'
@@ -92,7 +90,7 @@ export default function App() {
           <div className="w-full h-full flex flex-col lg:flex-row items-center justify-between px-4 sm:px-8 lg:px-16 pt-16 lg:pt-0 gap-6 lg:gap-8 max-w-7xl mx-auto overflow-y-auto lg:overflow-visible">
             {/* Texterie responsive haut de gamme */}
             <div className="w-full lg:w-1/2 flex flex-col justify-center items-start text-left z-10 py-2 sm:py-4 lg:py-0">
-              
+
               {/* Badge d'état / disponibilité */}
               <motion.div
                 initial={{ opacity: 0, y: 15 }}
